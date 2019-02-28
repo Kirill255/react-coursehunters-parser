@@ -13,9 +13,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 //   return <ListItem button component="a" {...props} />;
 // }
 
-function fetchHelper(url, index) {
-  console.log(url);
-  console.log(index);
+function fetchHelper(url) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve("Success");
@@ -48,7 +46,8 @@ class Result extends Component {
       loading: false,
       success: false,
       loadingBox: [],
-      successBox: []
+      successBox: [],
+      dontRepeatDownloadBox: []
     };
   }
   static getDerivedStateFromProps(props, state) {
@@ -57,26 +56,12 @@ class Result extends Component {
       return {
         checked: [...Array(props.linksCount).keys()],
         loadingBox: new Array(props.linksCount).fill(false),
-        successBox: new Array(props.linksCount).fill(false)
+        successBox: new Array(props.linksCount).fill(false),
+        dontRepeatDownloadBox: new Array(props.linksCount).fill(false)
       };
     }
     return null;
   }
-
-  componentDidMount() {
-    // console.log(this.props);
-    // const arr = [];
-    // for (let i = 0; i < this.props.linksCount; i++) {
-    //   arr.push("");
-    // }
-    // const arr = new Array(this.props.linksCount).fill("");
-    // console.log(arr);
-    // this.setState({ loadingBox: arr });
-  }
-
-  // componentWillUnmount() {
-  //   clearTimeout(this.timer);
-  // }
 
   handleToggle = (value) => () => {
     const { checked } = this.state;
@@ -95,47 +80,42 @@ class Result extends Component {
   };
 
   handleButtonClick = (link, index) => {
-    if (!this.state.loadingBox[index]) {
+    if (!this.state.loadingBox[index] && !this.state.successBox[index]) {
+      console.log("Download");
       const loadingBoxOnRequest = [...this.state.loadingBox];
       loadingBoxOnRequest[index] = true;
-      // const successBoxOnRequest = [...this.state.successBox];
-      // successBoxOnRequest[index] = true;
       console.log(loadingBoxOnRequest);
-      // console.log(successBoxOnRequest);
       this.setState(
         {
           loadingBox: loadingBoxOnRequest
-          // successBox: successBoxOnRequest
         },
         () => {
-          fetchHelper(link, index).then((response) => {
+          fetchHelper(link).then((response) => {
             console.log(response);
             const loadingBoxAfterRequest = [...this.state.loadingBox];
             loadingBoxAfterRequest[index] = false;
             const successBoxAfterRequest = [...this.state.successBox];
             successBoxAfterRequest[index] = true;
+            const dontRepeatDownloadBoxAfterRequest = [...this.state.dontRepeatDownloadBox];
+            dontRepeatDownloadBoxAfterRequest[index] = true;
             this.setState({
               loadingBox: loadingBoxAfterRequest,
-              successBox: successBoxAfterRequest
+              successBox: successBoxAfterRequest,
+              dontRepeatDownloadBox: dontRepeatDownloadBoxAfterRequest
               // loading: false
               // success: true
             });
           });
-          // // newLoadingBox[index] = false;
-          // this.timer = setTimeout(() => {
-          //   this.setState({
-          //     // loadingBox: newLoadingBox,
-          //     success: true
-          //   });
-          // }, 2000);
         }
       );
+    } else {
+      console.log("Save");
     }
   };
 
   render() {
     const { links, onDownloadHandler } = this.props;
-    const { loadingBox, successBox } = this.state;
+    const { loadingBox, successBox, dontRepeatDownloadBox } = this.state;
     return (
       <div className="result">
         <ul>
@@ -147,10 +127,10 @@ class Result extends Component {
                   variant="contained"
                   color="primary"
                   className=""
-                  disabled={loadingBox[index]}
+                  disabled={loadingBox[index] && !dontRepeatDownloadBox[index]}
                   onClick={() => this.handleButtonClick(link, index)}
                 >
-                  {loadingBox[index] ? (
+                  {loadingBox[index] && !dontRepeatDownloadBox[index] ? (
                     <CircularProgress size={24} className="" />
                   ) : successBox[index] ? (
                     "Save"

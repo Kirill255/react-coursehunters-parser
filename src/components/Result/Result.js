@@ -15,26 +15,23 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 function fetchHelper(url) {
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve("Success");
-    }, 3000);
+    fetch(url)
+      .then((response) => response.blob())
+      .then((response) => {
+        resolve(response);
+        // downloadHelper(response);
+      })
+      .catch(reject);
   });
-
-  // fetch(url)
-  //   .then((response) => response.blob())
-  //   .then((response) => {
-  //     // downloadHelper(response);
-  //   })
-  //   .catch(console.log);
 }
 
-function downloadHelper(blob, el, name) {
+function downloadHelper(blob, index, event) {
   const urlCreator = (window.URL = window.URL || window.webkitURL);
-  const imageUrl = urlCreator.createObjectURL(blob);
-  const link = document.querySelector(el);
-  link.href = imageUrl;
-  link.download = name;
-  // urlCreator.revokeObjectURL(imageUrl);
+  const blobURL = urlCreator.createObjectURL(blob);
+  const link = event.target;
+  link.href = blobURL;
+  link.download = `Lesson ${index}`;
+  // urlCreator.revokeObjectURL(blobURL);
 }
 
 class Result extends Component {
@@ -79,7 +76,9 @@ class Result extends Component {
     });
   };
 
-  handleButtonClick = (link, index) => {
+  handleButtonClick = (link, index, event) => {
+    event.persist();
+    console.log(event);
     if (!this.state.loadingBox[index] && !this.state.successBox[index]) {
       console.log("Download");
       const loadingBoxOnRequest = [...this.state.loadingBox];
@@ -92,6 +91,8 @@ class Result extends Component {
         () => {
           fetchHelper(link).then((response) => {
             console.log(response);
+            downloadHelper(response, index + 1, event);
+
             const loadingBoxAfterRequest = [...this.state.loadingBox];
             loadingBoxAfterRequest[index] = false;
             const successBoxAfterRequest = [...this.state.successBox];
@@ -124,11 +125,13 @@ class Result extends Component {
               Lesson {index + 1} {link}
               <span className="wrapper">
                 <Button
+                  id={`button_${index}`}
                   variant="contained"
                   color="primary"
                   className=""
+                  component="a"
                   disabled={loadingBox[index] && !dontRepeatDownloadBox[index]}
-                  onClick={() => this.handleButtonClick(link, index)}
+                  onClick={(e) => this.handleButtonClick(link, index, e)}
                 >
                   {loadingBox[index] && !dontRepeatDownloadBox[index] ? (
                     <CircularProgress size={24} className="" />

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import "./Result.css";
 
 // import List from "@material-ui/core/List";
@@ -35,6 +36,12 @@ function downloadHelper(blob, index, event) {
 }
 
 class Result extends Component {
+  static propTypes = {
+    links: PropTypes.array,
+    linksCount: PropTypes.number,
+    onDownloadHandler: PropTypes.func
+  };
+
   constructor(props) {
     super(props);
 

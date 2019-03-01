@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import "./Search.css";
 
 import TextField from "@material-ui/core/TextField";
@@ -24,6 +25,11 @@ const Search = ({ onChangeHandler, onSearchHandler }) => {
       </Button>
     </div>
   );
+};
+
+Search.propTypes = {
+  onChangeHandler: PropTypes.func,
+  onSearchHandler: PropTypes.func
 };
 
 export default Search;

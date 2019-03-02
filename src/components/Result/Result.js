@@ -17,7 +17,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 function fetchHelper(url) {
   return new Promise((resolve, reject) => {
     fetch(url)
-      .then((response) => response.arrayBuffer())
+      .then((response) => response.blob())
       .then((response) => {
         resolve(response);
         // downloadHelper(response);
@@ -26,14 +26,12 @@ function fetchHelper(url) {
   });
 }
 
-function downloadHelper(arrayBuffer, index, event) {
-  const sampleVideoData = new Uint8Array(arrayBuffer);
-  const blob = new Blob([sampleVideoData]);
+function downloadHelper(blob, index, event) {
   const urlCreator = (window.URL = window.URL || window.webkitURL);
   const blobURL = urlCreator.createObjectURL(blob);
   const link = event.target;
   link.href = blobURL;
-  link.download = `Lesson ${index}.mp4`;
+  link.download = `Lesson ${index}`;
   // urlCreator.revokeObjectURL(blobURL);
 }
 

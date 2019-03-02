@@ -17,7 +17,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 function fetchHelper(url) {
   return new Promise((resolve, reject) => {
     fetch(url)
-      .then((response) => response.blob())
+      .then((response) => response.arrayBuffer())
       .then((response) => {
         resolve(response);
         // downloadHelper(response);
@@ -26,12 +26,14 @@ function fetchHelper(url) {
   });
 }
 
-function downloadHelper(blob, index, event) {
+function downloadHelper(arrayBuffer, index, event) {
+  const sampleVideoData = new Uint8Array(arrayBuffer);
+  const blob = new Blob([sampleVideoData]);
   const urlCreator = (window.URL = window.URL || window.webkitURL);
   const blobURL = urlCreator.createObjectURL(blob);
   const link = event.target;
   link.href = blobURL;
-  link.download = `Lesson ${index}`;
+  link.download = `Lesson ${index}.mp4`;
   // urlCreator.revokeObjectURL(blobURL);
 }
 
@@ -200,4 +202,17 @@ https://github.com/axetroy/react-download
 https://github.com/Bazai/coursehunters-parser
 https://ru.reactjs.org/
 https://www.youtube.com/playlist?list=PLFaW_8zE4amOp3pOVCrGO-Ox--q4WShsQ
+
+https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
+https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/btoa
+https://stackoverflow.com/questions/246801/how-can-you-encode-a-string-to-base64-in-javascript
+https://github.com/dankogai/js-base64
+https://stackoverflow.com/questions/6794255/html-download-a-pdf-file-instead-of-opening-them-in-browser-when-clicked/34729861#34729861
+https://www.npmjs.com/package/downloadjs
+
+http://bgrins.github.io/videoconverter.js/#docs
+https://developer.mozilla.org/ru/docs/Web/HTTP/Basics_of_HTTP/MIME_types
+https://github.com/eligrey/FileSaver.js
+https://github.com/jimmywarting/StreamSaver.js
+https://stackoverflow.com/questions/5107956/client-side-file-creation-and-download
 */

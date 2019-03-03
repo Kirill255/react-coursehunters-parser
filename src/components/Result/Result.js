@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { saveAs } from "file-saver";
 import "./Result.css";
 
 // import List from "@material-ui/core/List";
@@ -27,11 +28,12 @@ function fetchHelper(url) {
 }
 
 function downloadHelper(blob, index, event) {
-  const urlCreator = (window.URL = window.URL || window.webkitURL);
-  const blobURL = urlCreator.createObjectURL(blob);
-  const link = event.target;
-  link.href = blobURL;
-  link.download = `Lesson ${index}`;
+  saveAs(blob, `Lesson ${index}`);
+  // const urlCreator = (window.URL = window.URL || window.webkitURL);
+  // const blobURL = urlCreator.createObjectURL(blob);
+  // const link = event.target;
+  // link.href = blobURL;
+  // link.download = `Lesson ${index}`;
   // urlCreator.revokeObjectURL(blobURL);
 }
 

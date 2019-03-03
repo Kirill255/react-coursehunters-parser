@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "cb59995a5c8d7d71a0ed",
+    "revision": "c3ed4aa06ed70cb11f30",
     "url": "/react-coursehunters-parser/static/css/main.1db8d167.chunk.css"
   },
   {
-    "revision": "cb59995a5c8d7d71a0ed",
-    "url": "/react-coursehunters-parser/static/js/main.cb59995a.chunk.js"
+    "revision": "c3ed4aa06ed70cb11f30",
+    "url": "/react-coursehunters-parser/static/js/main.c3ed4aa0.chunk.js"
   },
   {
     "revision": "914b8132085e28e739f9",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/react-coursehunters-parser/static/js/2.e4f2e229.chunk.js"
   },
   {
-    "revision": "b95112dec63b16494012c0718f913f01",
+    "revision": "84db5b533068c52615431becb59f6c07",
     "url": "/react-coursehunters-parser/index.html"
   }
 ];

@@ -55,17 +55,17 @@ class Result extends Component {
 
   handleButtonClick = (link, index) => {
     if (!this.state.loadingBox[index] && !this.state.successBox[index]) {
-      console.log("Download");
+      // console.log("Download");
       const loadingBoxOnRequest = [...this.state.loadingBox];
       loadingBoxOnRequest[index] = true;
-      console.log(loadingBoxOnRequest);
+      // console.log(loadingBoxOnRequest);
       this.setState(
         {
           loadingBox: loadingBoxOnRequest
         },
         () => {
           fetchHelper(link).then((response) => {
-            console.log(response);
+            // console.log(response);
             downloadHelper(response, index + 1);
 
             const loadingBoxAfterRequest = [...this.state.loadingBox];

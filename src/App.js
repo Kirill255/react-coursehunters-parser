@@ -37,7 +37,7 @@ class App extends Component {
 
   onSearchHandler = () => {
     if (this.state.url) {
-      console.log(this.state.url);
+      // console.log(this.state.url);
       this.parseHandler(this.state.url);
     }
   };

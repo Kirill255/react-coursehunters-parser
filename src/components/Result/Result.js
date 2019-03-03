@@ -3,17 +3,11 @@ import PropTypes from "prop-types";
 import { saveAs } from "file-saver";
 import "./Result.css";
 
-// import List from "@material-ui/core/List";
-// import ListItem from "@material-ui/core/ListItem";
-// import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-// import ListItemText from "@material-ui/core/ListItemText";
-// import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-
-// function ListItemLink(props) {
-//   return <ListItem button component="a" {...props} />;
-// }
+import CloudDownload from "@material-ui/icons/CloudDownload";
+import CloudDone from "@material-ui/icons/CloudDone";
+// import Send from "@material-ui/icons/Send";
 
 function fetchHelper(url) {
   return new Promise((resolve, reject) => {
@@ -27,14 +21,8 @@ function fetchHelper(url) {
   });
 }
 
-function downloadHelper(blob, index, event) {
+function downloadHelper(blob, index) {
   saveAs(blob, `Lesson ${index}`);
-  // const urlCreator = (window.URL = window.URL || window.webkitURL);
-  // const blobURL = urlCreator.createObjectURL(blob);
-  // const link = event.target;
-  // link.href = blobURL;
-  // link.download = `Lesson ${index}`;
-  // urlCreator.revokeObjectURL(blobURL);
 }
 
 class Result extends Component {
@@ -48,9 +36,6 @@ class Result extends Component {
     super(props);
 
     this.state = {
-      checked: [],
-      loading: false,
-      success: false,
       loadingBox: [],
       successBox: [],
       dontRepeatDownloadBox: []
@@ -60,7 +45,6 @@ class Result extends Component {
     // http://qaru.site/questions/6812/create-a-javascript-array-containing-1n
     if (props.linksCount !== state.loadingBox.length) {
       return {
-        checked: [...Array(props.linksCount).keys()],
         loadingBox: new Array(props.linksCount).fill(false),
         successBox: new Array(props.linksCount).fill(false),
         dontRepeatDownloadBox: new Array(props.linksCount).fill(false)
@@ -69,25 +53,7 @@ class Result extends Component {
     return null;
   }
 
-  handleToggle = (value) => () => {
-    const { checked } = this.state;
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    this.setState({
-      checked: newChecked
-    });
-  };
-
-  handleButtonClick = (link, index, event) => {
-    event.persist();
-    console.log(event);
+  handleButtonClick = (link, index) => {
     if (!this.state.loadingBox[index] && !this.state.successBox[index]) {
       console.log("Download");
       const loadingBoxOnRequest = [...this.state.loadingBox];
@@ -100,7 +66,7 @@ class Result extends Component {
         () => {
           fetchHelper(link).then((response) => {
             console.log(response);
-            downloadHelper(response, index + 1, event);
+            downloadHelper(response, index + 1);
 
             const loadingBoxAfterRequest = [...this.state.loadingBox];
             loadingBoxAfterRequest[index] = false;
@@ -112,8 +78,6 @@ class Result extends Component {
               loadingBox: loadingBoxAfterRequest,
               successBox: successBoxAfterRequest,
               dontRepeatDownloadBox: dontRepeatDownloadBoxAfterRequest
-              // loading: false
-              // success: true
             });
           });
         }
@@ -124,40 +88,57 @@ class Result extends Component {
   };
 
   render() {
-    const { links, onDownloadHandler } = this.props;
+    // const { links, onDownloadHandler } = this.props;
+    const { links } = this.props;
     const { loadingBox, successBox, dontRepeatDownloadBox } = this.state;
     return (
       <div className="result">
-        <ul>
+        <ol>
           {links.map((link, index) => (
-            <li key={index}>
-              Lesson {index + 1} {link}
+            <li className="link-item" key={index}>
+              <a
+                className="link"
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >{`${link}`}</a>
               <span className="wrapper">
                 <Button
                   id={`button_${index}`}
                   variant="contained"
-                  color="primary"
-                  className=""
-                  component="a"
-                  disabled={loadingBox[index] && !dontRepeatDownloadBox[index]}
-                  onClick={(e) => this.handleButtonClick(link, index, e)}
+                  color="default"
+                  size="small"
+                  disabled={
+                    (loadingBox[index] && !dontRepeatDownloadBox[index]) || successBox[index]
+                  }
+                  onClick={() => this.handleButtonClick(link, index)}
                 >
                   {loadingBox[index] && !dontRepeatDownloadBox[index] ? (
                     <CircularProgress size={24} className="" />
                   ) : successBox[index] ? (
-                    "Save"
+                    <React.Fragment>
+                      <CloudDone />
+                    </React.Fragment>
                   ) : (
-                    "Download"
+                    <React.Fragment>
+                      <CloudDownload />
+                    </React.Fragment>
                   )}
                 </Button>
               </span>
             </li>
           ))}
-        </ul>
+        </ol>
 
-        <Button variant="contained" color="primary" className="button" onClick={onDownloadHandler}>
-          Download
-        </Button>
+        {/* <Button
+          variant="contained"
+          color="secondary"
+          className="button"
+          onClick={onDownloadHandler}
+        >
+          Download All
+          <Send className="rightIcon" />
+        </Button> */}
       </div>
     );
   }
@@ -166,36 +147,9 @@ class Result extends Component {
 export default Result;
 
 /*
-<div className="result">
-    <List dense className="list">
-      {links.map((link, index) => (
-        <ListItem key={index} button onClick={this.handleToggle(index)}>
-          <ListItemLink href={link} download={`Lesson ${index + 1}`}>
-            <ListItemText primary={`${index + 1}. `} />
-          </ListItemLink>
-          <ListItemSecondaryAction>
-            <Checkbox
-              onChange={this.handleToggle(index)}
-              checked={this.state.checked.indexOf(index) !== -1}
-            />
-          </ListItemSecondaryAction>
-        </ListItem>
-      ))}
-    </List>
-
-    <Button variant="contained" color="primary" className="button" onClick={onDownloadHandler}>
-      Download
-    </Button>
-  </div>
-
-
-
-
-  <a href={link} download={`Lesson${index + 1}`}>
-    {`${index + 1}. `}
-  </a>
-
-
+Кнопка 'Download All' не работает, просто заглушка
+*/
+/*
 https://gist.github.com/javilobo8/097c30a233786be52070986d8cdb1743
 https://bugs.chromium.org/p/chromium/issues/detail?id=373182
 https://github.com/axetroy/react-download

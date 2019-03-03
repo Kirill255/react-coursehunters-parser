@@ -53,7 +53,7 @@ class App extends Component {
   };
 
   onDownloadHandler = () => {
-    console.log("download");
+    console.log("downloaded all");
   };
 
   render() {

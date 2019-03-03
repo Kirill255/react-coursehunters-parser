@@ -4,6 +4,7 @@ import "./Search.css";
 
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Forward from "@material-ui/icons/Forward";
 
 const Search = ({ onChangeHandler, onSearchHandler }) => {
   return (
@@ -20,8 +21,9 @@ const Search = ({ onChangeHandler, onSearchHandler }) => {
         variant="outlined"
         onChange={onChangeHandler}
       />
-      <Button variant="contained" color="secondary" className="button" onClick={onSearchHandler}>
-        Go parse
+      <Button variant="contained" color="primary" className="button" onClick={onSearchHandler}>
+        Parse
+        <Forward className="rightIcon" />
       </Button>
     </div>
   );

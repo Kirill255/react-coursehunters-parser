@@ -11,9 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
   .button {
     display: flex !important;
     margin: 0 auto !important;
   }
+}
+
+.rightIcon {
+  margin-left: 10px;
 }
